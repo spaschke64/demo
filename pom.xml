@@ -65,8 +65,12 @@
 			<artifactId>cdm-core</artifactId>
 			<version>6.0.0-beta1</version>
 		</dependency>
-
-
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20230618</version>
+		</dependency>
 
 
 		<dependency>

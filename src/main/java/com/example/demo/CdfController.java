@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.json.JSONArray;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,20 +28,23 @@ public class CdfController {
     }
 //http://localhost:8080/get-data?time_index=879.78516&z_index=2.0
     @RequestMapping("/get-data")
-    public String getData(@RequestParam double time_index, @RequestParam double z_index) throws IOException {
+    public JSONArray getData(@RequestParam double time_index, @RequestParam double z_index) throws IOException {
         System.out.println("time_index: " + time_index);
         System.out.println("z_index: " + z_index);
-        String results = cdfService.getData(time_index, z_index);
+
+        JSONArray results = cdfService.getData(time_index, z_index);
+        //convert results to json
+
         return results;
     }
     @RequestMapping("/get-image")
-    public String getImage(@RequestParam double time_index, @RequestParam double z_index) throws IOException {
-        String data = cdfService.getData(time_index, z_index);
+    public void getImage(@RequestParam double time_index, @RequestParam double z_index) throws IOException {
+        JSONArray data = cdfService.getData(time_index, z_index);
         // create an image of the data
         //save image as a png file
         //return the image
 
-        return "In getImage";
+        cdfService.createImage(data);
     }
 
     @GetMapping("/get-vars")
