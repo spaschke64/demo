@@ -18,7 +18,7 @@ public class CdfController {
     @GetMapping("/")
     public String getRoot() {
         System.out.println("Root endpoint");
-        return "endpoints are /get-info /get-data and /get-image";
+        return "endpoints are /get-info /get-data /get-vars and /get-image";
     }
 
     @GetMapping("/get-info")
