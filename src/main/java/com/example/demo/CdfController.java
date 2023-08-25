@@ -34,6 +34,9 @@ public class CdfController {
         System.out.println("z_index: " + z_index);
         JSONArray jsonArray = new JSONArray();
         Array results = cdfService.getData(time_index, z_index);
+        if (results == null) {
+            return jsonArray;
+        }
         //convert results to json
         // save x, y, concentration in a json object filtered_results
         // loop through results and save each object in a json array
