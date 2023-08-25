@@ -5,6 +5,9 @@ import org.json.JSONObject;
 import ucar.ma2.Array;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
+import ucar.nc2.dt.GridDataset;
+import ucar.nc2.dt.GridDatatype;
+import ucar.nc2.geotiff.GeotiffWriter;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +15,7 @@ import java.util.List;
 public class CdfService {
 
     // getData
-    JSONArray getData(double time_index,double z_index) throws IOException {        //open the file in the project directory at com.example.demo.concentration.timeseries.nc
+    Array getData(double time_index,double z_index) throws IOException {        //open the file in the project directory at com.example.demo.concentration.timeseries.nc
         NetcdfFile netcdfFile = null;
         try {
             netcdfFile = NetcdfFile.open("target/classes/static/concentration.timeseries.nc");
@@ -40,7 +43,8 @@ public class CdfService {
             System.out.println("Error: " + e);
         }
         // filter results
-        JSONArray filtered_results = filterResults(results, time_index, z_index);
+        Array filtered_results = filterResults(results, time_index, z_index);
+
         return filtered_results;
     }
     // make image
@@ -68,12 +72,13 @@ public class CdfService {
 
 
 
-   JSONArray filterResults(List<Array> results, double time_index, double z_index) {
-        // filter results
+   Array filterResults(List<Array> results, double time_index, double z_index) {
+        ucar.ma2.Array filtered_results= null;
+       // filter results
         int count = 0;
         int num_found = 0;
-        JSONArray jsonArray = new JSONArray();
-        for (Array result : results) {
+        int filtered_count = 0;
+        for (ucar.ma2.Array result : results) {
             System.out.println(result);
             double result_time = result.getDouble(count);
             System.out.println("result_time: " + result_time);
@@ -87,16 +92,19 @@ public class CdfService {
             System.out.println("result_concentration: " + result_concentration);
             if (result_time == time_index && result_z == z_index) {
                 System.out.println("Found it!");
-                // save x, y, concentration in a json object filtered_results
-                JSONObject jsonObject = makeJsonObject(result_x, result_y, result_concentration);
-                jsonArray.put(jsonObject);
-                num_found += 1;
+                // save result_x, result_y, result_concentration in  ucar.ma2.Array  filtered_results
+                filtered_results.setDouble(filtered_count, result_x);
+                filtered_results.setDouble(filtered_count+1, result_y);
+                filtered_results.setDouble(filtered_count+2, result_concentration);
+                num_found += 3;
             }
+
+
             count += 5;
 
         } // end for
         System.out.println("num_found: " + num_found);
-        return jsonArray;
+        return filtered_results;
     }
 
     // make json object
@@ -108,8 +116,20 @@ public class CdfService {
         return jsonObject;
     }
 
-    void createImage(JSONArray data) {
+    void createImage(Array data) {
+        NetcdfFile netcdfFile = null;
+        //open the file in the project directory at com.example.demo.concentration.timeseries.nc
+        try {
+            netcdfFile = NetcdfFile.open("target/classes/static/concentration.timeseries.nc");
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
         // create an image of the data
+        GridDatatype gridType = null;
+        GridDataset gridDataset = null;
+
+        //GeotiffWriter geotiffWriter = new ucar.nc2.geotiff.GeotiffWriter(fileOut);
+        //geotiffWriter.writeGrid(gridDataset,gridType, data,true);
         //save image as a png file
         //return the image
     }
