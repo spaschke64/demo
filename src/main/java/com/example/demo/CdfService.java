@@ -31,11 +31,12 @@ public class CdfService {
 
         //List<Array> contents = netcdfFile.readArrays();
         List<Variable> varNames = List.of(new Variable[]{
-                         concentration
+                 time,z,y,x,concentration
         });
         // read data from the file. Gives all the x,y,z, time, concentration data in the file
         List<Array> results = netcdfFile.readArrays(varNames);
-
+        //this might work better
+        //        public double[] getJavaArrayDouble(String memberName);
 
         try{
             netcdfFile.close();
@@ -71,15 +72,21 @@ public class CdfService {
     }
 
 
-
+// this is confusing because we are getting data for 5 variables.
+// I think we only want to loop through the Concentration results.
+    //what confuses me is the different lengths of the arrays. But the concentration
+    //is time, z,y,x. In this case it is (time=8, z=1, y=27, x=36)
+    // perhaps I am reading it incorrectly. I should treat it as a 4 dimensional array.
+    // concentration[time][z][y][x]
    Array filterResults(List<Array> results, double time_index, double z_index) {
-        ucar.ma2.Array filtered_results= null;
+        ucar.ma2.Array filtered_results = new ucar.ma2.ArrayDouble.D1(3) ;
        // filter results
         int count = 0;
         int num_found = 0;
         int filtered_count = 0;
+//this loop has an error.
         for (ucar.ma2.Array result : results) {
-            System.out.println(result);
+            System.out.println(results);
             double result_time = result.getDouble(count);
             System.out.println("result_time: " + result_time);
             double result_y = result.getDouble(count+1);
@@ -90,17 +97,18 @@ public class CdfService {
             System.out.println("result_z: " + result_z);
             double result_concentration = result.getDouble(count+4);
             System.out.println("result_concentration: " + result_concentration);
-            if (result_time == time_index && result_z == z_index) {
+   //debug get all time and z         if (result_time == time_index && result_z == z_index) {
                 System.out.println("Found it!");
                 // save result_x, result_y, result_concentration in  ucar.ma2.Array  filtered_results
                 filtered_results.setDouble(filtered_count, result_x);
                 filtered_results.setDouble(filtered_count+1, result_y);
                 filtered_results.setDouble(filtered_count+2, result_concentration);
                 num_found += 3;
-            }
+                filtered_count += 3;
+   //         }
 
 
-            count += 5;
+            count +=5;
 
         } // end for
         System.out.println("num_found: " + num_found);
