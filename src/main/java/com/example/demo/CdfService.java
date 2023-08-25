@@ -33,7 +33,7 @@ public class CdfService {
         List<Variable> varNames = List.of(new Variable[]{
                          concentration
         });
-        // read data from the file.
+        // read data from the file. Gives all the x,y,z, time, concentration data in the file
         List<Array> results = netcdfFile.readArrays(varNames);
 
 
@@ -42,7 +42,7 @@ public class CdfService {
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
-        // filter results
+        // filter results by time and z, returning only x, y, and concentration
         Array filtered_results = filterResults(results, time_index, z_index);
 
         return filtered_results;
