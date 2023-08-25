@@ -30,7 +30,7 @@ public class CdfService {
         List<Variable> varNames = List.of(new Variable[]{
                          concentration
         });
-// read data from the file.
+        // read data from the file.
         List<Array> results = netcdfFile.readArrays(varNames);
 
 

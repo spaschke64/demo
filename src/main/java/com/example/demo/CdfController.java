@@ -38,13 +38,14 @@ public class CdfController {
         return results;
     }
     @RequestMapping("/get-image")
-    public void getImage(@RequestParam double time_index, @RequestParam double z_index) throws IOException {
+    public String getImage(@RequestParam double time_index, @RequestParam double z_index) throws IOException {
         JSONArray data = cdfService.getData(time_index, z_index);
         // create an image of the data
         //save image as a png file
         //return the image
 
         cdfService.createImage(data);
+        return "This is only a test.  If this were a real image, you would be instructed where to go and what to do.";
     }
 
     @GetMapping("/get-vars")
