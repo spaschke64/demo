@@ -8,3 +8,5 @@ includes x, y, and concentration data that match the params.
 c. /get-image, params to include time index and z index, incomplete, returns png visualization of
 concentration.
 d. /get-vars returns the variables and their descriptions.   I included this for debugging purposes.
+
+API documentation is index.html in the project
